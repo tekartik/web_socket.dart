@@ -3,7 +3,7 @@ language: dart
 
 jobs:
   include:
-    - stage: smoke_test
+    - stage: analyzer_and_format
       script: ./tool/travis.sh dartfmt dartanalyzer
       env: PKG="packages/web_socket_io"
       dart: dev
@@ -11,9 +11,13 @@ jobs:
       script: ./tool/travis.sh test_vm
       env: PKG="packages/web_socket_io"
       dart: dev
-    - stage: unit_test
-      script: ./tool/travis.sh test_1
-      env: PKG="mono_repo"
+    - stage: analyzer_and_format
+      script: ./tool/travis.sh dartfmt dartanalyzer
+      env: PKG="packages/web_socket"
+      dart: dev
+    - stage: test_vm
+      script: ./tool/travis.sh test_vm
+      env: PKG="packages/web_socket"
       dart: dev
 
 stages:
