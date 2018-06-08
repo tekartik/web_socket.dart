@@ -21,7 +21,7 @@ jobs:
       dart: dev
 
 stages:
-  - smoke_test
+  - analyzer_and_format
   - test_vm
 
 # Only building master means that we don't run two builds for each pull request.
