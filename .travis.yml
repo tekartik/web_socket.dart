@@ -5,19 +5,19 @@ jobs:
   include:
     - stage: analyzer_and_format
       script: ./tool/travis.sh dartfmt dartanalyzer
-      env: PKG="packages/web_socket_io"
+      env: PKG="web_socket_io"
       dart: dev
     - stage: test_vm
       script: ./tool/travis.sh test_vm
-      env: PKG="packages/web_socket_io"
+      env: PKG="web_socket_io"
       dart: dev
     - stage: analyzer_and_format
       script: ./tool/travis.sh dartfmt dartanalyzer
-      env: PKG="packages/web_socket"
+      env: PKG="web_socket"
       dart: dev
     - stage: test_vm
       script: ./tool/travis.sh test_vm
-      env: PKG="packages/web_socket"
+      env: PKG="web_socket"
       dart: dev
 
 stages:
