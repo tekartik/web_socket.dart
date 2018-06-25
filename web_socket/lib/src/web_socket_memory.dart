@@ -173,7 +173,7 @@ class MemoryWebSocketServerChannel<T> extends WebSocketChannelMemory<T> {
 }
 
 class MemoryWebSocketClientChannel<T> extends WebSocketChannelMemory<T> {
-  MemoryWebSocketServerChannel server;
+  MemoryWebSocketServerChannel<T> server;
 
   WebSocketChannelMemory get link => server;
   String url;
@@ -193,8 +193,8 @@ class MemoryWebSocketClientChannel<T> extends WebSocketChannelMemory<T> {
           webSocketMemory.servers[port];
       if (channelServer != null) {
         // connect them
-        MemoryWebSocketServerChannel serverChannel =
-            new MemoryWebSocketServerChannel(channelServer)..client = this;
+        MemoryWebSocketServerChannel<T> serverChannel =
+            new MemoryWebSocketServerChannel<T>(channelServer)..client = this;
         this.server = serverChannel;
 
         // notify

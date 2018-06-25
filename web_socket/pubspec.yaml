@@ -1,21 +1,24 @@
 name: tekartik_web_socket
 description: Web socket core
-version: 0.0.1
+version: 0.0.2
 #homepage: https://www.example.com
 #author: alex <email@example.com>
 
 environment:
-  sdk: '>=2.0.0-dev.54 <2.0.0'
+  sdk: '>=2.0.0-dev.64 <2.0.0'
 
 dependencies:
   http: any
   tekartik_common_utils:
     git: git://github.com/tekartik/common_utils.dart
-  web_socket_channel: any
+  web_socket_channel: ^1.0.8
+  stream_channel: ^1.6.7
 
 dev_dependencies:
-  test: ">=0.12.37"
+  test: "^1.0.0"
   dev_test: any
+  build_runner: ^0.9.0
+  build_test: any
 
 dependency_overrides:
   tekartik_web_socket_test:
