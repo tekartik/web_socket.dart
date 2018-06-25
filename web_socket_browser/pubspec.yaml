@@ -14,6 +14,7 @@ dependencies:
     git:
       url: git://github.com/tekartik/web_socket.dart
       path: web_socket
+    version: '>=0.0.3'
 
 dev_dependencies:
   test: ">=0.12.37"

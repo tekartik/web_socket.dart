@@ -1,6 +1,6 @@
 name: tekartik_web_socket_io
 description: Platform io
-version: 0.0.1
+version: 0.0.2
 #homepage: https://www.example.com
 #author: alex <email@example.com>
 
@@ -12,9 +12,10 @@ dependencies:
     git:
       url: git://github.com/tekartik/web_socket.dart
       path: web_socket
+    version: '>=0.0.3'
   tekartik_common_utils:
     git: git://github.com/tekartik/common_utils.dart
-  shelf: any
+  shelf: '>=0.7.3'
 dev_dependencies:
   test: "^1.0.0"
   dev_test: any
