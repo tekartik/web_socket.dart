@@ -16,6 +16,7 @@ dependencies:
   tekartik_common_utils:
     git: git://github.com/tekartik/common_utils.dart
   shelf: '>=0.7.3'
+  shelf_web_socket: '>=0.2.2'
 dev_dependencies:
   test: "^1.0.0"
   dev_test: any
