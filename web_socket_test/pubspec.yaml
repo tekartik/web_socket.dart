@@ -1,6 +1,6 @@
 name: tekartik_web_socket_test
 description: Platform test
-version: 0.0.1
+version: 0.1.0
 #homepage: https://www.example.com
 #author: alex <email@example.com>
 
@@ -15,9 +15,9 @@ dependencies:
       ref: dart2
 
 dev_dependencies:
-  test: "^1.0.0"
+  test: ">=1.0.0"
   dev_test: any
-  collection: '^1.14.10'
+  collection: '>=1.14.10'
 
 dependency_overrides:
   tekartik_web_socket:

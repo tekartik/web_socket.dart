@@ -10,5 +10,6 @@ export 'src/web_socket_memory.dart'
     show
         webSocketChannelFactoryMemory,
         webSocketChannelClientFactoryMemory,
-        webSocketChannelServerFactoryMemory;
+        webSocketChannelServerFactoryMemory,
+        smartWebSocketChannelClientFactory;
 export 'src/web_socket_native.dart' show WebSocketChannelNative;
