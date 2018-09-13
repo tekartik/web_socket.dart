@@ -79,6 +79,15 @@ web_socket_test_main(WebSocketChannelFactory channelFactory) {
           await await wsServer.sink.close();
         });
       });
+      test("Send client first", () async {
+        var server = await channelFactory.server.serve<String>();
+        var wsClient = channelFactory.client.connect<String>(server.url);
+        wsClient.sink.add("hi");
+        var wsServer = await server.stream.first;
+        expect(await wsServer.stream.first, "hi");
+        await wsClient.sink.close();
+        await server.close();
+      });
     });
 
     test("failure_right_away", () async {
@@ -106,6 +115,19 @@ web_socket_test_main(WebSocketChannelFactory channelFactory) {
       }
 
       expect(failed, isTrue);
+    });
+
+    test("failure", () async {
+      WebSocketChannel wsClient;
+      wsClient =
+          channelFactory.client.connect("${channelFactory.scheme}://dummy");
+
+      var completer = Completer();
+      wsClient.stream.listen((_) {}, onError: (e) {
+        print(e);
+        completer.complete();
+      });
+      await completer.future;
     });
   });
 }

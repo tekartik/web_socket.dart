@@ -8,7 +8,7 @@ import 'package:shelf_web_socket/shelf_web_socket.dart';
 import 'package:tekartik_web_socket/web_socket.dart';
 import 'package:shelf/shelf_io.dart' as shelf_io;
 
-class _IoWebSocketChannelServerFactory
+class _WebSocketChannelServerFactoryIo
     implements WebSocketChannelServerFactory {
   Future<WebSocketChannelServer<T>> serve<T>({address, int port}) async {
     port ??= 0;
@@ -21,8 +21,8 @@ class _IoWebSocketChannelServerFactory
 
 bool _debug = false;
 
-WebSocketChannelServerFactory ioWebSocketChannelServerFactory =
-    new _IoWebSocketChannelServerFactory();
+WebSocketChannelServerFactory webSocketChannelServerFactoryIo =
+    new _WebSocketChannelServerFactoryIo();
 
 class _IoWebSocketChannelServer<T> implements WebSocketChannelServer<T> {
   List<WebSocketChannel> channels = [];
@@ -101,7 +101,7 @@ WebSocketClientChannelFactoryIo get webSocketChannelClientFactoryIo =>
 class WebSocketChannelFactoryIo extends WebSocketChannelFactory {
   String get scheme => webSocketUrlScheme;
   WebSocketChannelFactoryIo()
-      : super(ioWebSocketChannelServerFactory, webSocketChannelClientFactoryIo);
+      : super(webSocketChannelServerFactoryIo, webSocketChannelClientFactoryIo);
 }
 
 final WebSocketChannelFactoryIo webSocketChannelFactoryIo =

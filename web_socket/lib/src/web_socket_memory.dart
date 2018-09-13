@@ -184,27 +184,28 @@ class MemoryWebSocketClientChannel<T> extends WebSocketChannelMemory<T> {
     }
     int port = parseInt(url.replaceFirst(webSocketUrlMemoryScheme + ":", ""));
 
+    // Don't delay anymore
+    // To allow connecting directly
     // Deley others
-    new Future.value().then((_) {
-      // devPrint("port $port");
+//    new Future.value().then((_) {
+    // devPrint("port $port");
 
-      // Find server
-      WebSocketChannelServerMemory channelServer =
-          webSocketMemory.servers[port];
-      if (channelServer != null) {
-        // connect them
-        MemoryWebSocketServerChannel<T> serverChannel =
-            new MemoryWebSocketServerChannel<T>(channelServer)..client = this;
-        this.server = serverChannel;
+    // Find server
+    WebSocketChannelServerMemory channelServer = webSocketMemory.servers[port];
+    if (channelServer != null) {
+      // connect them
+      MemoryWebSocketServerChannel<T> serverChannel =
+          new MemoryWebSocketServerChannel<T>(channelServer)..client = this;
+      this.server = serverChannel;
 
-        // notify
-        channelServer.streamController.add(serverChannel);
-      } else {
-        streamController.addError("cannot connect ${this.url}");
-        close();
-        //throw "cannot connect ${this.url}";
-      }
-    });
+      // notify
+      channelServer.streamController.add(serverChannel);
+    } else {
+      streamController.addError("cannot connect ${this.url}");
+      close();
+      //throw "cannot connect ${this.url}";
+    }
+    //  });
   }
 }
 
@@ -289,8 +290,8 @@ class WebSocketChannelServerMemory<T> implements WebSocketChannelServer<T> {
   toString() => "server $url";
 }
 
-class _WebSocketChannelServerFactoryMemory<T>
-    implements WebSocketChannelServerFactory<T> {
+class _WebSocketChannelServerFactoryMemory
+    implements WebSocketChannelServerFactory {
   Future<WebSocketChannelServer<T>> serve<T>({address, int port}) async {
     port ??= 0;
     // We don't care about the address

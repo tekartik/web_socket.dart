@@ -8,5 +8,8 @@ import 'package:tekartik_web_socket_test/web_socket_test.dart';
 //import 'package:tekartik_serial_wss_client/channel/channel.dart';
 
 main() {
+  // test exported method
+  webSocketChannelClientFactoryIo;
+  webSocketChannelServerFactoryIo;
   web_socket_test_main(webSocketChannelFactoryIo);
 }

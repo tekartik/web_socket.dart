@@ -22,7 +22,7 @@ abstract class WebSocketChannelFactory {
 
 String webSocketUrlScheme = "ws";
 
-abstract class WebSocketChannelServerFactory<T> {
+abstract class WebSocketChannelServerFactory {
   Future<WebSocketChannelServer<T>> serve<T>({var address, int port});
 }
 
