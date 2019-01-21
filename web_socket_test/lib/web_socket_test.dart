@@ -82,9 +82,10 @@ void webSocketTestMain(WebSocketChannelFactory channelFactory) {
       test("Send client first", () async {
         var server = await channelFactory.server.serve<String>();
         var wsClient = channelFactory.client.connect<String>(server.url);
-        wsClient.sink.add("hi");
         var wsServer = await server.stream.first;
-        expect(await wsServer.stream.first, "hi");
+        var firstMessageFuture = wsServer.stream.first;
+        wsClient.sink.add("hi");
+        expect(await firstMessageFuture, "hi");
         await wsClient.sink.close();
         await server.close();
       });
