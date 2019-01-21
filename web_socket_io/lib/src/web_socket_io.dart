@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart' as native;
+// ignore: implementation_imports
 import 'package:tekartik_web_socket/src/web_socket_native.dart';
 import 'package:shelf_web_socket/shelf_web_socket.dart';
 import 'package:tekartik_web_socket/web_socket.dart';
@@ -10,10 +11,11 @@ import 'package:shelf/shelf_io.dart' as shelf_io;
 
 class _WebSocketChannelServerFactoryIo
     implements WebSocketChannelServerFactory {
+  @override
   Future<WebSocketChannelServer<T>> serve<T>({address, int port}) async {
     port ??= 0;
     address ??= InternetAddress.anyIPv6;
-    var server = new _IoWebSocketChannelServer<T>(address, port);
+    var server = _WebSocketChannelServerIo<T>(address, port);
     await server.serve();
     return server;
   }
@@ -22,27 +24,28 @@ class _WebSocketChannelServerFactoryIo
 bool _debug = false;
 
 WebSocketChannelServerFactory webSocketChannelServerFactoryIo =
-    new _WebSocketChannelServerFactoryIo();
+    _WebSocketChannelServerFactoryIo();
 
-class _IoWebSocketChannelServer<T> implements WebSocketChannelServer<T> {
+class _WebSocketChannelServerIo<T> implements WebSocketChannelServer<T> {
   List<WebSocketChannel> channels = [];
 
   //static DevFlag debug = new DevFlag("debug");
   var address;
 
   // Port will changed when serving
+  @override
   int port;
   HttpServer httpServer;
 
-  _IoWebSocketChannelServer(this.address, this.port) {
-    streamController = new StreamController();
+  _WebSocketChannelServerIo(this.address, this.port) {
+    streamController = StreamController();
   }
 
   Future serve() async {
     var handler =
         webSocketHandler((native.WebSocketChannel nativeWebSocketChannel) {
       WebSocketChannelNative<T> webSocketChannel =
-          new WebSocketChannelNative(nativeWebSocketChannel);
+          WebSocketChannelNative(nativeWebSocketChannel);
 
       // add to our list for cleanup
       channels.add(webSocketChannel);
@@ -68,13 +71,15 @@ class _IoWebSocketChannelServer<T> implements WebSocketChannelServer<T> {
 
   StreamController<WebSocketChannel<T>> streamController;
 
+  @override
   Stream<WebSocketChannel<T>> get stream => streamController.stream;
 
-  close() async {
+  @override
+  Future close() async {
     await httpServer.close(force: true);
 
     // copy the channels remaining list and close them
-    List channels = new List.from(this.channels);
+    List<WebSocketChannel> channels = List.from(this.channels);
     for (WebSocketChannel channel in channels) {
       await channel.sink.close();
     }
@@ -88,21 +93,22 @@ class _IoWebSocketChannelServer<T> implements WebSocketChannelServer<T> {
 class WebSocketClientChannelFactoryIo extends WebSocketChannelClientFactory {
   @override
   WebSocketChannel<T> connect<T>(String url) {
-    return new WebSocketChannelNative(new IOWebSocketChannel.connect(url));
+    return WebSocketChannelNative(IOWebSocketChannel.connect(url));
   }
 }
 
 WebSocketClientChannelFactoryIo _webSocketClientChannelFactoryIo;
 
 WebSocketClientChannelFactoryIo get webSocketChannelClientFactoryIo =>
-    _webSocketClientChannelFactoryIo ??= new WebSocketClientChannelFactoryIo();
+    _webSocketClientChannelFactoryIo ??= WebSocketClientChannelFactoryIo();
 
 // both client/server
 class WebSocketChannelFactoryIo extends WebSocketChannelFactory {
+  @override
   String get scheme => webSocketUrlScheme;
   WebSocketChannelFactoryIo()
       : super(webSocketChannelServerFactoryIo, webSocketChannelClientFactoryIo);
 }
 
 final WebSocketChannelFactoryIo webSocketChannelFactoryIo =
-    new WebSocketChannelFactoryIo();
+    WebSocketChannelFactoryIo();
