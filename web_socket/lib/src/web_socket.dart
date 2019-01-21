@@ -1,13 +1,14 @@
 import 'dart:async';
 
 import 'package:stream_channel/stream_channel.dart';
-export 'web_socket_native.dart' show WebSocketChannelNative;
+
 export 'web_socket_memory.dart'
     show
         webSocketChannelFactoryMemory,
         webSocketChannelClientFactoryMemory,
         webSocketMemory,
         webSocketChannelServerFactoryMemory;
+export 'web_socket_native.dart' show WebSocketChannelNative;
 
 abstract class WebSocketChannel<T> extends StreamChannelMixin<T> {}
 

@@ -4,25 +4,26 @@ import 'package:stream_channel/stream_channel.dart';
 import 'package:tekartik_common_utils/int_utils.dart';
 import 'package:tekartik_web_socket/web_socket.dart';
 
-webSocketClientChannelFactoryMemory _webSocketChannelClientFactoryMemory;
+WebSocketClientChannelFactoryMemory _webSocketChannelClientFactoryMemory;
 
-webSocketClientChannelFactoryMemory get webSocketChannelClientFactoryMemory =>
+WebSocketClientChannelFactoryMemory get webSocketChannelClientFactoryMemory =>
     _webSocketChannelClientFactoryMemory ??=
-        new webSocketClientChannelFactoryMemory();
+        WebSocketClientChannelFactoryMemory();
 
 WebSocketChannelServerFactory _webSocketChannelServerFactoryMemory;
 
 WebSocketChannelServerFactory get webSocketChannelServerFactoryMemory =>
     _webSocketChannelServerFactoryMemory ??=
-        new _WebSocketChannelServerFactoryMemory();
+        _WebSocketChannelServerFactoryMemory();
 
 WebSocketDataMemory _webSocketMemory;
 
 WebSocketDataMemory get webSocketMemory =>
-    _webSocketMemory ??= new WebSocketDataMemory();
+    _webSocketMemory ??= WebSocketDataMemory();
 
 // initialize both
 class WebSocketChannelFactoryMemory extends WebSocketChannelFactory {
+  @override
   String get scheme => webSocketUrlMemoryScheme;
 
   WebSocketChannelFactoryMemory()
@@ -33,7 +34,7 @@ class WebSocketChannelFactoryMemory extends WebSocketChannelFactory {
 WebSocketChannelFactoryMemory _memoryWebSocketChannelFactory;
 
 WebSocketChannelFactoryMemory get webSocketChannelFactoryMemory =>
-    _memoryWebSocketChannelFactory ??= new WebSocketChannelFactoryMemory();
+    _memoryWebSocketChannelFactory ??= WebSocketChannelFactoryMemory();
 
 String webSocketUrlMemoryScheme = "memory";
 
@@ -41,7 +42,7 @@ String webSocketUrlMemoryScheme = "memory";
 // will redirect memory: to memory
 WebSocketChannelClientFactory smartWebSocketChannelClientFactory(
         WebSocketChannelClientFactory defaultFactory) =>
-    new WebSocketChannelClientFactoryMerged(defaultFactory);
+    WebSocketChannelClientFactoryMerged(defaultFactory);
 
 // Global list of servers
 class WebSocketDataMemory {
@@ -49,12 +50,12 @@ class WebSocketDataMemory {
   Map<int, WebSocketChannelServer> servers = {};
   Map<int, WebSocketChannelMemory> channels = {}; // both server and client
 
-  addServer(WebSocketChannelServer server) {
+  void addServer(WebSocketChannelServer server) {
     servers[server.port] = server;
     // devPrint("adding $server");
   }
 
-  removeServer(WebSocketChannelServer server) {
+  void removeServer(WebSocketChannelServer server) {
     servers.remove(server.port);
     // devPrint("removing $server");
   }
@@ -106,7 +107,7 @@ class MemorySink<T> implements StreamSink<T> {
 
   WebSocketChannelMemory get link => channel.link;
 
-  Completer doneCompleter = new Completer();
+  Completer doneCompleter = Completer();
 
   @override
   void add(event) {
@@ -127,7 +128,7 @@ class MemorySink<T> implements StreamSink<T> {
     if (link != null) {
       return link.streamController.addStream(stream);
     }
-    return new Future.value();
+    return Future.value();
   }
 
   Future _close() async {
@@ -147,11 +148,11 @@ class MemorySink<T> implements StreamSink<T> {
   Future get done => doneCompleter.future;
 }
 
-class webSocketClientChannelFactoryMemory
+class WebSocketClientChannelFactoryMemory
     extends WebSocketChannelClientFactory {
   @override
   WebSocketChannel<T> connect<T>(String url) {
-    return new MemoryWebSocketClientChannel<T>.connect(url);
+    return MemoryWebSocketClientChannel<T>.connect(url);
   }
 }
 
@@ -165,9 +166,10 @@ class MemoryWebSocketServerChannel<T> extends WebSocketChannelMemory<T> {
     channelServer.channels.add(this);
   }
 
+  @override
   WebSocketChannelMemory get link => client;
 
-  _close() {
+  void _close() {
     channelServer.channels.remove(this);
   }
 }
@@ -175,26 +177,27 @@ class MemoryWebSocketServerChannel<T> extends WebSocketChannelMemory<T> {
 class MemoryWebSocketClientChannel<T> extends WebSocketChannelMemory<T> {
   MemoryWebSocketServerChannel<T> server;
 
+  @override
   WebSocketChannelMemory get link => server;
-  String url;
 
-  MemoryWebSocketClientChannel.connect(this.url) {
+  MemoryWebSocketClientChannel.connect(String url) {
+    this.url = url;
     if (!url.startsWith(webSocketUrlMemoryScheme)) {
       throw "unsupported scheme";
     }
     int port = parseInt(url.replaceFirst(webSocketUrlMemoryScheme + ":", ""));
 
     // Deley others
-    new Future.value().then((_) {
+    Future.value().then((_) {
       // devPrint("port $port");
 
       // Find server
-      WebSocketChannelServerMemory channelServer =
-          webSocketMemory.servers[port];
+      final channelServer =
+          webSocketMemory.servers[port] as WebSocketChannelServerMemory;
       if (channelServer != null) {
         // connect them
         MemoryWebSocketServerChannel<T> serverChannel =
-            new MemoryWebSocketServerChannel<T>(channelServer)..client = this;
+            MemoryWebSocketServerChannel<T>(channelServer)..client = this;
         this.server = serverChannel;
 
         // notify
@@ -218,8 +221,8 @@ abstract class WebSocketChannelMemory<T> extends StreamChannelMixin<T>
   WebSocketChannelMemory get link;
 
   WebSocketChannelMemory() {
-    streamController = new StreamController();
-    sink = new MemorySink(this);
+    streamController = StreamController();
+    sink = MemorySink(this);
   }
 
   @override
@@ -261,15 +264,18 @@ class WebSocketChannelServerMemory<T> implements WebSocketChannelServer<T> {
   List<WebSocketChannel> channels = [];
   StreamController<MemoryWebSocketServerChannel<T>> streamController;
 
+  @override
   Stream<WebSocketChannel<T>> get stream => streamController.stream;
 
+  @override
   final int port;
 
   WebSocketChannelServerMemory(this.port) {
-    streamController = new StreamController();
+    streamController = StreamController();
   }
 
-  close() async {
+  @override
+  Future close() async {
     // Close our stream
     await streamController.close();
 
@@ -277,7 +283,7 @@ class WebSocketChannelServerMemory<T> implements WebSocketChannelServer<T> {
     webSocketMemory.removeServer(this);
 
     // kill all connections
-    List<WebSocketChannelMemory> channels = new List.from(this.channels);
+    List<WebSocketChannelMemory> channels = List.from(this.channels);
     for (WebSocketChannelMemory channel in channels) {
       await channel.close();
     }
@@ -286,11 +292,13 @@ class WebSocketChannelServerMemory<T> implements WebSocketChannelServer<T> {
   @override
   String get url => "${webSocketUrlMemoryScheme}:${port}";
 
-  toString() => "server $url";
+  @override
+  String toString() => "server $url";
 }
 
 class _WebSocketChannelServerFactoryMemory<T>
     implements WebSocketChannelServerFactory<T> {
+  @override
   Future<WebSocketChannelServer<T>> serve<T>({address, int port}) async {
     port ??= 0;
     // We don't care about the address
@@ -298,7 +306,7 @@ class _WebSocketChannelServerFactoryMemory<T>
 
     port = webSocketMemory.checkPort(port);
 
-    var server = new WebSocketChannelServerMemory<T>(port);
+    var server = WebSocketChannelServerMemory<T>(port);
 
     // Add in our global table
     webSocketMemory.addServer(server);
