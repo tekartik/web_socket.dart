@@ -187,27 +187,33 @@ class MemoryWebSocketClientChannel<T> extends WebSocketChannelMemory<T> {
     }
     int port = parseInt(url.replaceFirst(webSocketUrlMemoryScheme + ":", ""));
 
-    // Deley others
-    Future.value().then((_) {
-      // devPrint("port $port");
+    // 2019-01-23
+    // Don't delay anymore
+    // so that it can connect directly
+    // Note that this affect a test 'Send client first'
 
-      // Find server
-      final channelServer =
-          webSocketMemory.servers[port] as WebSocketChannelServerMemory;
-      if (channelServer != null) {
-        // connect them
-        MemoryWebSocketServerChannel<T> serverChannel =
-            MemoryWebSocketServerChannel<T>(channelServer)..client = this;
-        this.server = serverChannel;
+    // Delay connection
+    // Future.value().then((_) {
+    // devPrint("port $port");
 
-        // notify
-        channelServer.streamController.add(serverChannel);
-      } else {
-        streamController.addError("cannot connect ${this.url}");
-        close();
-        //throw "cannot connect ${this.url}";
-      }
-    });
+    // Find server
+    final channelServer =
+        webSocketMemory.servers[port] as WebSocketChannelServerMemory;
+    if (channelServer != null) {
+      // connect them
+      MemoryWebSocketServerChannel<T> serverChannel =
+          MemoryWebSocketServerChannel<T>(channelServer)..client = this;
+      this.server = serverChannel;
+
+      // notify
+      channelServer.streamController.add(serverChannel);
+    } else {
+      streamController.addError("cannot connect ${this.url}");
+      close();
+      //throw "cannot connect ${this.url}";
+    }
+
+    // });
   }
 }
 
@@ -312,36 +318,5 @@ class _WebSocketChannelServerFactoryMemory<T>
     webSocketMemory.addServer(server);
 
     return server;
-    /*
-    port ??= serialWssPortDefault;
-    address ??= InternetAddress.ANY_IP_V6;
-    HttpServer httpServer;
-
-    _IoWebSocketChannelServer serialServer;
-
-    var handler = webSocketHandler((native.WebSocketChannel webSocketChannel) {
-      SerialServerConnection serverChannel = new SerialServerConnection(
-          serialServer, ++serialServer.lastId, webSocketChannel);
-
-      serialServer.channels.add(serverChannel);
-      if (SerialServer.debug) {
-        print("[SerialServer] adding channel: ${serialServer.channels}");
-      }
-    });
-
-    httpServer = await shelf_io.serve(handler, address, port);
-    serialServer =
-    //new SerialServer(await shelf_io.serve(handler, 'localhost', 8988));
-    new IoSerialServer(httpServer);
-    if (SerialServer.debug) {
-      print(
-          'Serving at ws://${serialServer.httpServer.address
-              .host}:${serialServer
-              .httpServer.port}');
-    }
-    return serialServer;
-    */
   }
 }
-
-// bool _debug = true;
