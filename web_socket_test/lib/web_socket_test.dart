@@ -79,6 +79,28 @@ void webSocketTestMain(WebSocketChannelFactory channelFactory) {
           await await wsServer.sink.close();
         });
       });
+
+      test("Receive server first", () async {
+        var server = await channelFactory.server.serve<String>();
+        var wsClient = channelFactory.client.connect<String>(server.url);
+        var wsServer = await server.stream.first;
+        var firstMessageFuture = wsServer.stream.first;
+        wsClient.sink.add("hi");
+        expect(await firstMessageFuture, "hi");
+        await wsClient.sink.close();
+        await server.close();
+      });
+
+      test("Send client first", () async {
+        var server = await channelFactory.server.serve<String>();
+        var wsClient = channelFactory.client.connect<String>(server.url);
+        wsClient.sink.add("hi");
+        // Here we listen on the server after
+        var wsServer = await server.stream.first;
+        expect(await wsServer.stream.first, "hi");
+        await wsClient.sink.close();
+        await server.close();
+      });
     });
 
     test("failure_right_away", () async {
@@ -106,6 +128,19 @@ void webSocketTestMain(WebSocketChannelFactory channelFactory) {
       }
 
       expect(failed, isTrue);
+    });
+
+    test("failure", () async {
+      WebSocketChannel wsClient;
+      wsClient =
+          channelFactory.client.connect("${channelFactory.scheme}://dummy");
+
+      var completer = Completer();
+      wsClient.stream.listen((_) {}, onError: (e) {
+        print(e);
+        completer.complete();
+      });
+      await completer.future;
     });
   });
 }

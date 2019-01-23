@@ -9,13 +9,13 @@ import 'package:shelf_web_socket/shelf_web_socket.dart';
 import 'package:tekartik_web_socket/web_socket.dart';
 import 'package:shelf/shelf_io.dart' as shelf_io;
 
-class _IoWebSocketChannelServerFactory
+class _WebSocketChannelServerFactoryIo
     implements WebSocketChannelServerFactory {
   @override
   Future<WebSocketChannelServer<T>> serve<T>({address, int port}) async {
     port ??= 0;
     address ??= InternetAddress.anyIPv6;
-    var server = _IoWebSocketChannelServer<T>(address, port);
+    var server = _WebSocketChannelServerIo<T>(address, port);
     await server.serve();
     return server;
   }
@@ -23,10 +23,10 @@ class _IoWebSocketChannelServerFactory
 
 bool _debug = false;
 
-WebSocketChannelServerFactory ioWebSocketChannelServerFactory =
-    _IoWebSocketChannelServerFactory();
+WebSocketChannelServerFactory webSocketChannelServerFactoryIo =
+    _WebSocketChannelServerFactoryIo();
 
-class _IoWebSocketChannelServer<T> implements WebSocketChannelServer<T> {
+class _WebSocketChannelServerIo<T> implements WebSocketChannelServer<T> {
   List<WebSocketChannel> channels = [];
 
   //static DevFlag debug = new DevFlag("debug");
@@ -37,7 +37,7 @@ class _IoWebSocketChannelServer<T> implements WebSocketChannelServer<T> {
   int port;
   HttpServer httpServer;
 
-  _IoWebSocketChannelServer(this.address, this.port) {
+  _WebSocketChannelServerIo(this.address, this.port) {
     streamController = StreamController();
   }
 
@@ -107,7 +107,7 @@ class WebSocketChannelFactoryIo extends WebSocketChannelFactory {
   @override
   String get scheme => webSocketUrlScheme;
   WebSocketChannelFactoryIo()
-      : super(ioWebSocketChannelServerFactory, webSocketChannelClientFactoryIo);
+      : super(webSocketChannelServerFactoryIo, webSocketChannelClientFactoryIo);
 }
 
 final WebSocketChannelFactoryIo webSocketChannelFactoryIo =
