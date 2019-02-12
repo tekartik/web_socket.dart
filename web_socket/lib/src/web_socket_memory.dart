@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:stream_channel/stream_channel.dart';
 import 'package:tekartik_common_utils/int_utils.dart';
 import 'package:tekartik_web_socket/web_socket.dart';
+import 'package:pedantic/pedantic.dart';
 
 WebSocketClientChannelFactoryMemory _webSocketChannelClientFactoryMemory;
 
@@ -131,7 +132,7 @@ class MemorySink<T> implements StreamSink<T> {
     return Future.value();
   }
 
-  Future _close() async {
+  void _close() {
     if (!doneCompleter.isCompleted) {
       doneCompleter.complete();
     }
@@ -169,7 +170,9 @@ class MemoryWebSocketServerChannel<T> extends WebSocketChannelMemory<T> {
   @override
   WebSocketChannelMemory get link => client;
 
+  @override
   void _close() {
+    super._close();
     channelServer.channels.remove(this);
   }
 }
@@ -239,13 +242,19 @@ abstract class WebSocketChannelMemory<T> extends StreamChannelMixin<T>
 
   bool _closing = false;
 
-  Future close() async {
+  void _close() {
     if (!_closing) {
       _closing = true;
-      await sink._close();
-      await streamController.close();
+      sink._close();
+      unawaited(streamController.close());
+    }
+  }
+
+  Future close() async {
+    if (!_closing) {
+      _close();
       // link might be null if not connected yet
-      await link?.close();
+      link?._close();
     }
   }
 }
