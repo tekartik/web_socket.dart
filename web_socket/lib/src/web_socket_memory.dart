@@ -141,7 +141,7 @@ class MemorySink<T> implements StreamSink<T> {
   // it will call _close
   @override
   Future close() async {
-    channel.close();
+    await channel.close();
   }
 
   @override
