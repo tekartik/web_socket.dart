@@ -311,8 +311,8 @@ class WebSocketChannelServerMemory<T> implements WebSocketChannelServer<T> {
   String toString() => "server $url";
 }
 
-class _WebSocketChannelServerFactoryMemory<T>
-    implements WebSocketChannelServerFactory<T> {
+class _WebSocketChannelServerFactoryMemory
+    implements WebSocketChannelServerFactory {
   @override
   Future<WebSocketChannelServer<T>> serve<T>({address, int port}) async {
     port ??= 0;
