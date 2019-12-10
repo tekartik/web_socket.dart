@@ -1,4 +1,4 @@
-@TestOn("vm")
+@TestOn('vm')
 library tekartik_web_socket_io.test.web_socket_io_test;
 
 import 'package:test/test.dart';

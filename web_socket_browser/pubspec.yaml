@@ -1,11 +1,11 @@
 name: tekartik_web_socket_browser
 description: Web socket browser
-version: 0.2.1
+version: 0.2.2
 #homepage: https://www.example.com
 #author: alex <email@example.com>
 
 environment:
-  sdk: '>=2.0.0-dev.54 <3.0.0'
+  sdk: '>=2.5.0 <3.0.0'
 
 dependencies:
   tekartik_web_socket:
@@ -13,7 +13,7 @@ dependencies:
       url: git://github.com/tekartik/web_socket.dart
       path: web_socket
       ref: dart2
-    version: '>=0.2.1'
+    version: '>=0.2.2'
 
 dev_dependencies:
   test: ">=1.0.0"
@@ -21,6 +21,7 @@ dev_dependencies:
   build_runner: '>=0.8.7'
   build_test: '>=0.10.2'
   build_web_compilers: '>=0.4.0'
+  process_run:
 
 dependency_overrides:
   tekartik_web_socket:

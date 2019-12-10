@@ -1,50 +1,15 @@
 # Created with https://github.com/dart-lang/mono_repo
 language: dart
+dart:
+  - stable
+  - 2.5.0
+  - dev
+sudo: required
+addons:
+  chrome: stable
 
-jobs:
-  include:
-    - stage: analyzer_and_format
-      script: ./tool/travis.sh dartfmt dartanalyzer
-      env: PKG="web_socket_io"
-      dart: dev
-    - stage: test_vm
-      script: ./tool/travis.sh test_vm
-      env: PKG="web_socket_io"
-      dart: dev
-    - stage: analyzer_and_format
-      script: ./tool/travis.sh dartfmt dartanalyzer
-      env: PKG="web_socket"
-      dart: dev
-    - stage: test_vm
-      script: ./tool/travis.sh test_vm
-      env: PKG="web_socket"
-      dart: dev
-    - stage: analyzer_and_format
-      script: ./tool/travis.sh dartfmt dartanalyzer
-      env: PKG="web_socket_io"
-      dart: stable
-    - stage: test_vm
-      script: ./tool/travis.sh test_vm
-      env: PKG="web_socket_io"
-      dart: stable
-    - stage: analyzer_and_format
-      script: ./tool/travis.sh dartfmt dartanalyzer
-      env: PKG="web_socket"
-      dart: stable
-    - stage: test_vm
-      script: ./tool/travis.sh test_vm
-      env: PKG="web_socket"
-      dart: stable
-
-stages:
-  - analyzer_and_format
-  - test_vm
-
-# Only building master means that we don't run two builds for each pull request.
-branches:
-  only:
-    - master
-    - dart2
+script:
+  - ./tool/travis.sh
 
 cache:
   directories:

@@ -21,7 +21,7 @@ abstract class WebSocketChannelFactory {
   WebSocketChannelServerFactory server;
 }
 
-String webSocketUrlScheme = "ws";
+String webSocketUrlScheme = 'ws';
 
 abstract class WebSocketChannelServerFactory {
   Future<WebSocketChannelServer<T>> serve<T>({var address, int port});

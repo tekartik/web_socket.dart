@@ -29,7 +29,7 @@ WebSocketChannelServerFactory webSocketChannelServerFactoryIo =
 class _WebSocketChannelServerIo<T> implements WebSocketChannelServer<T> {
   List<WebSocketChannel> channels = [];
 
-  //static DevFlag debug = new DevFlag("debug");
+  //static DevFlag debug = new DevFlag('debug');
   var address;
 
   // Port will changed when serving
@@ -44,8 +44,8 @@ class _WebSocketChannelServerIo<T> implements WebSocketChannelServer<T> {
   Future serve() async {
     var handler =
         webSocketHandler((native.WebSocketChannel nativeWebSocketChannel) {
-      WebSocketChannelNative<T> webSocketChannel =
-          WebSocketChannelNative(nativeWebSocketChannel);
+      final webSocketChannel =
+          WebSocketChannelNative<T>(nativeWebSocketChannel);
 
       // add to our list for cleanup
       channels.add(webSocketChannel);
@@ -53,7 +53,7 @@ class _WebSocketChannelServerIo<T> implements WebSocketChannelServer<T> {
       streamController.add(webSocketChannel);
       if (_debug) {
         print(
-            "[_IoWebSocketChannelServer] adding channel: ${webSocketChannel}");
+            '[_IoWebSocketChannelServer] adding channel: ${webSocketChannel}');
       }
       // handle when the channel is done
       webSocketChannel.done.then((_) {
@@ -61,7 +61,7 @@ class _WebSocketChannelServerIo<T> implements WebSocketChannelServer<T> {
       });
     });
 
-    this.httpServer = await shelf_io.serve(handler, address, port);
+    httpServer = await shelf_io.serve(handler, address, port);
     port = httpServer.port;
     if (_debug) {
       print(httpServer.address);
@@ -79,15 +79,15 @@ class _WebSocketChannelServerIo<T> implements WebSocketChannelServer<T> {
     await httpServer.close(force: true);
 
     // copy the channels remaining list and close them
-    List<WebSocketChannel> channels = List.from(this.channels);
-    for (WebSocketChannel channel in channels) {
+    final channels = List<WebSocketChannel>.from(this.channels);
+    for (final channel in channels) {
       await channel.sink.close();
     }
   }
 
   @override
-  String get url => "ws://localhost:${port}";
-// "ws://${httpServer.address.host}:${port}"; not working
+  String get url => 'ws://localhost:${port}';
+// 'ws://${httpServer.address.host}:${port}'; not working
 }
 
 class WebSocketClientChannelFactoryIo extends WebSocketChannelClientFactory {
