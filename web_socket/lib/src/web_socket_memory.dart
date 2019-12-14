@@ -37,7 +37,7 @@ WebSocketChannelFactoryMemory _memoryWebSocketChannelFactory;
 WebSocketChannelFactoryMemory get webSocketChannelFactoryMemory =>
     _memoryWebSocketChannelFactory ??= WebSocketChannelFactoryMemory();
 
-String webSocketUrlMemoryScheme = "memory";
+String webSocketUrlMemoryScheme = 'memory';
 
 // The one to use
 // will redirect memory: to memory
@@ -53,12 +53,12 @@ class WebSocketDataMemory {
 
   void addServer(WebSocketChannelServer server) {
     servers[server.port] = server;
-    // devPrint("adding $server");
+    // devPrint('adding $server');
   }
 
   void removeServer(WebSocketChannelServer server) {
     servers.remove(server.port);
-    // devPrint("removing $server");
+    // devPrint('removing $server');
   }
 
   int checkPort(int port) {
@@ -186,9 +186,9 @@ class MemoryWebSocketClientChannel<T> extends WebSocketChannelMemory<T> {
   MemoryWebSocketClientChannel.connect(String url) {
     this.url = url;
     if (!url.startsWith(webSocketUrlMemoryScheme)) {
-      throw "unsupported scheme";
+      throw 'unsupported scheme';
     }
-    int port = parseInt(url.replaceFirst(webSocketUrlMemoryScheme + ":", ""));
+    final port = parseInt(url.replaceFirst(webSocketUrlMemoryScheme + ':', ''));
 
     // 2019-01-23
     // Don't delay anymore
@@ -197,23 +197,23 @@ class MemoryWebSocketClientChannel<T> extends WebSocketChannelMemory<T> {
 
     // Delay connection
     // Future.value().then((_) {
-    // devPrint("port $port");
+    // devPrint('port $port');
 
     // Find server
     final channelServer =
         webSocketMemory.servers[port] as WebSocketChannelServerMemory;
     if (channelServer != null) {
       // connect them
-      MemoryWebSocketServerChannel<T> serverChannel =
-          MemoryWebSocketServerChannel<T>(channelServer)..client = this;
-      this.server = serverChannel;
+      final serverChannel = MemoryWebSocketServerChannel<T>(channelServer)
+        ..client = this;
+      server = serverChannel;
 
       // notify
       channelServer.streamController.add(serverChannel);
     } else {
-      streamController.addError("cannot connect ${this.url}");
+      streamController.addError('cannot connect ${this.url}');
       close();
-      //throw "cannot connect ${this.url}";
+      //throw 'cannot connect ${this.url}';
     }
 
     // });
@@ -268,7 +268,7 @@ class WebSocketChannelClientFactoryMerged
 
   @override
   WebSocketChannel<T> connect<T>(String url) {
-    if (url.startsWith("memory:")) {
+    if (url.startsWith('memory:')) {
       return webSocketChannelClientFactoryMemory.connect(url);
     }
     return defaultFactory.connect(url);
@@ -298,17 +298,17 @@ class WebSocketChannelServerMemory<T> implements WebSocketChannelServer<T> {
     webSocketMemory.removeServer(this);
 
     // kill all connections
-    List<WebSocketChannelMemory> channels = List.from(this.channels);
-    for (WebSocketChannelMemory channel in channels) {
+    final channels = List<WebSocketChannelMemory>.from(this.channels);
+    for (final channel in channels) {
       await channel.close();
     }
   }
 
   @override
-  String get url => "${webSocketUrlMemoryScheme}:${port}";
+  String get url => '${webSocketUrlMemoryScheme}:${port}';
 
   @override
-  String toString() => "server $url";
+  String toString() => 'server $url';
 }
 
 class _WebSocketChannelServerFactoryMemory
