@@ -1,11 +1,12 @@
 name: tekartik_web_socket
 description: Web socket core
 version: 0.2.2
+publish_to: none
 #homepage: https://www.example.com
 #author: alex <email@example.com>
 
 environment:
-  sdk: '>=2.5.0 <3.0.0'
+  sdk: '>=2.10.0-0 <3.0.0'
 
 dependencies:
   http: any
