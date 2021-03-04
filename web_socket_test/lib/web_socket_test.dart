@@ -12,9 +12,9 @@ void main() {
 void webSocketTestMain(WebSocketChannelFactory channelFactory) {
   group('channel', () {
     group('simple', () {
-      WebSocketChannelServer<List<int>> server;
+      late WebSocketChannelServer<List<int>> server;
       WebSocketChannel<List<int>> wsClient;
-      WebSocketChannel<List<int>> wsServer;
+      late WebSocketChannel<List<int>> wsServer;
 
       Future simpleTest(Function close) async {
         server = await channelFactory.server.serve();

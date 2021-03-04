@@ -15,7 +15,7 @@ class _SinkNative<T> extends StreamSink<T> {
   }
 
   @override
-  void addError(Object error, [StackTrace stackTrace]) {
+  void addError(Object error, [StackTrace? stackTrace]) {
     nativeInstance.addError(error, stackTrace);
   }
 
@@ -47,12 +47,12 @@ class WebSocketChannelNative<T> extends StreamChannelMixin<T>
     }, onDone: () {
       doneCompleter.complete();
       streamController.close();
-    }, onError: (e, StackTrace st) {
+    }, onError: (Object e, StackTrace st) {
       streamController.addError(e, st);
     });
   }
 
-  StreamSink<T> _sink;
+  StreamSink<T>? _sink;
 
   @override
   StreamSink<T> get sink => _sink ??= _SinkNative<T>(nativeChannel.sink);
