@@ -14,7 +14,7 @@ dependencies
     git:
       url: git://github.com/tekartik/web_socket.dart
       path: web_socket
-      ref: dart2
+      ref: null_safety
     version: '>=0.1.0'
 ````
 
@@ -28,7 +28,7 @@ dependencies
     git:
       url: git://github.com/tekartik/web_socket.dart
       path: web_socket_io
-      ref: dart2
+      ref: null_safety
     version: '>=0.1.0'
 ````
 
@@ -42,6 +42,6 @@ pubspec.yaml
     git:
       url: git://github.com/tekartik/web_socket.dart
       path: web_socket_browser
-      ref: dart2
+      ref: null_safety
     version: '>=0.1.0'
 ````

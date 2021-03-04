@@ -12,7 +12,7 @@ import 'package:shelf/shelf_io.dart' as shelf_io;
 class _WebSocketChannelServerFactoryIo
     implements WebSocketChannelServerFactory {
   @override
-  Future<WebSocketChannelServer<T>> serve<T>({address, int port}) async {
+  Future<WebSocketChannelServer<T>> serve<T>({address, int? port}) async {
     port ??= 0;
     address ??= InternetAddress.anyIPv6;
     var server = _WebSocketChannelServerIo<T>(address, port);
@@ -35,7 +35,7 @@ class _WebSocketChannelServerIo<T> implements WebSocketChannelServer<T> {
   // Port will changed when serving
   @override
   int port;
-  HttpServer httpServer;
+  late HttpServer httpServer;
 
   _WebSocketChannelServerIo(this.address, this.port) {
     streamController = StreamController();
@@ -52,8 +52,7 @@ class _WebSocketChannelServerIo<T> implements WebSocketChannelServer<T> {
 
       streamController.add(webSocketChannel);
       if (_debug) {
-        print(
-            '[_IoWebSocketChannelServer] adding channel: ${webSocketChannel}');
+        print('[_IoWebSocketChannelServer] adding channel: $webSocketChannel');
       }
       // handle when the channel is done
       webSocketChannel.done.then((_) {
@@ -69,7 +68,7 @@ class _WebSocketChannelServerIo<T> implements WebSocketChannelServer<T> {
     }
   }
 
-  StreamController<WebSocketChannel<T>> streamController;
+  late StreamController<WebSocketChannel<T>> streamController;
 
   @override
   Stream<WebSocketChannel<T>> get stream => streamController.stream;
@@ -86,7 +85,7 @@ class _WebSocketChannelServerIo<T> implements WebSocketChannelServer<T> {
   }
 
   @override
-  String get url => 'ws://localhost:${port}';
+  String get url => 'ws://localhost:$port';
 // 'ws://${httpServer.address.host}:${port}'; not working
 }
 
@@ -97,7 +96,7 @@ class WebSocketClientChannelFactoryIo extends WebSocketChannelClientFactory {
   }
 }
 
-WebSocketClientChannelFactoryIo _webSocketClientChannelFactoryIo;
+WebSocketClientChannelFactoryIo? _webSocketClientChannelFactoryIo;
 
 WebSocketClientChannelFactoryIo get webSocketChannelClientFactoryIo =>
     _webSocketClientChannelFactoryIo ??= WebSocketClientChannelFactoryIo();

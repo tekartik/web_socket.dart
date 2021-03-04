@@ -9,7 +9,7 @@ class WebSocketChannelClientFactoryBrowser
   }
 }
 
-WebSocketChannelClientFactoryBrowser _browserWebSocketClientChannelFactory;
+WebSocketChannelClientFactoryBrowser? _browserWebSocketClientChannelFactory;
 
 WebSocketChannelClientFactoryBrowser get webSocketClientChannelFactoryBrowser =>
     _browserWebSocketClientChannelFactory ??=

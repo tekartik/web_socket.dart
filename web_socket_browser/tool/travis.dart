@@ -1,11 +1,10 @@
-import 'package:process_run/shell.dart';
 import 'package:dev_test/package.dart';
 
 Future main() async {
   await ioPackageRunCi('.');
-  var shell = Shell();
+//  var shell = Shell();
 
-  await shell.run('''
-pub run build_runner test -- -p chrome
-''');
+//  await shell.run('''
+// pub run build_runner test -- -p chrome
+// ''');
 }

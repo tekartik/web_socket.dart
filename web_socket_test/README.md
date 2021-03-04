@@ -12,6 +12,6 @@ dev_dependencies:
     git:
       url: git://github.com/tekartik/web_socket.dart
       path: web_socket_test
-      ref: dart2
+      ref: null_safety
     version: '>=0.1.0'
 ````
