@@ -305,7 +305,7 @@ class WebSocketChannelServerMemory<T> implements WebSocketChannelServer<T> {
   }
 
   @override
-  String get url => '${webSocketUrlMemoryScheme}:${port}';
+  String get url => '$webSocketUrlMemoryScheme:$port';
 
   @override
   String toString() => 'server $url';

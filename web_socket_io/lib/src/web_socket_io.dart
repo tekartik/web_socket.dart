@@ -52,8 +52,7 @@ class _WebSocketChannelServerIo<T> implements WebSocketChannelServer<T> {
 
       streamController.add(webSocketChannel);
       if (_debug) {
-        print(
-            '[_IoWebSocketChannelServer] adding channel: ${webSocketChannel}');
+        print('[_IoWebSocketChannelServer] adding channel: $webSocketChannel');
       }
       // handle when the channel is done
       webSocketChannel.done.then((_) {
@@ -86,7 +85,7 @@ class _WebSocketChannelServerIo<T> implements WebSocketChannelServer<T> {
   }
 
   @override
-  String get url => 'ws://localhost:${port}';
+  String get url => 'ws://localhost:$port';
 // 'ws://${httpServer.address.host}:${port}'; not working
 }
 
