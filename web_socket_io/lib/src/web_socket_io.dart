@@ -30,7 +30,7 @@ class _WebSocketChannelServerIo<T> implements WebSocketChannelServer<T> {
   List<WebSocketChannel> channels = [];
 
   //static DevFlag debug = new DevFlag('debug');
-  var address;
+  Object? address;
 
   // Port will changed when serving
   @override
