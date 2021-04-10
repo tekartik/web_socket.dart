@@ -16,7 +16,7 @@ void webSocketTestMain(WebSocketChannelFactory channelFactory) {
       WebSocketChannel<List<int>> wsClient;
       late WebSocketChannel<List<int>> wsServer;
 
-      Future simpleTest(Function close) async {
+      Future simpleTest(Function() close) async {
         server = await channelFactory.server.serve();
         wsClient = channelFactory.client.connect(server.url);
         wsServer = await server.stream.first;
