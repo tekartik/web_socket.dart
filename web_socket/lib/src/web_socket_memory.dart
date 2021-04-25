@@ -1,9 +1,9 @@
 import 'dart:async';
 
+import 'package:pedantic/pedantic.dart';
 import 'package:stream_channel/stream_channel.dart';
 import 'package:tekartik_common_utils/int_utils.dart';
 import 'package:tekartik_web_socket/web_socket.dart';
-import 'package:pedantic/pedantic.dart';
 
 WebSocketClientChannelFactoryMemory? _webSocketChannelClientFactoryMemory;
 

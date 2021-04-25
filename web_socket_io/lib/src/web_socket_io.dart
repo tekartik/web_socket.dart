@@ -1,13 +1,14 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:web_socket_channel/io.dart';
-import 'package:web_socket_channel/web_socket_channel.dart' as native;
+import 'package:shelf/shelf_io.dart' as shelf_io;
+import 'package:shelf_web_socket/shelf_web_socket.dart';
+
 // ignore: implementation_imports
 import 'package:tekartik_web_socket/src/web_socket_native.dart';
-import 'package:shelf_web_socket/shelf_web_socket.dart';
 import 'package:tekartik_web_socket/web_socket.dart';
-import 'package:shelf/shelf_io.dart' as shelf_io;
+import 'package:web_socket_channel/io.dart';
+import 'package:web_socket_channel/web_socket_channel.dart' as native;
 
 class _WebSocketChannelServerFactoryIo
     implements WebSocketChannelServerFactory {
@@ -105,6 +106,7 @@ WebSocketClientChannelFactoryIo get webSocketChannelClientFactoryIo =>
 class WebSocketChannelFactoryIo extends WebSocketChannelFactory {
   @override
   String get scheme => webSocketUrlScheme;
+
   WebSocketChannelFactoryIo()
       : super(webSocketChannelServerFactoryIo, webSocketChannelClientFactoryIo);
 }
