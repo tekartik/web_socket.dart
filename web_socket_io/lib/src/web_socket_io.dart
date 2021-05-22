@@ -5,7 +5,6 @@ import 'package:shelf/shelf_io.dart' as shelf_io;
 import 'package:shelf_web_socket/shelf_web_socket.dart';
 
 // ignore: implementation_imports
-import 'package:tekartik_web_socket/src/web_socket_native.dart';
 import 'package:tekartik_web_socket/web_socket.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart' as native;
