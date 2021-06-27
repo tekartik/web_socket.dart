@@ -3,7 +3,7 @@ description: Web socket support project
 version: 0.0.1
 publish_to: none
 # homepage: https://www.example.com
-# author: alex <alex@tekartik.com>
+#
 
 environment:
   sdk: '>=2.10.0-0 <3.0.0'
