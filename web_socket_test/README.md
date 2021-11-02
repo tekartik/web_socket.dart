@@ -10,8 +10,8 @@ Test
 dev_dependencies:
   tekartik_web_socket_test:
     git:
-      url: git://github.com/tekartik/web_socket.dart
+      url: https://github.com/tekartik/web_socket.dart
       path: web_socket_test
-      ref: null_safety
+      ref: dart2_3
     version: '>=0.1.0'
 ````
