@@ -187,7 +187,7 @@ class MemoryWebSocketClientChannel<T> extends WebSocketChannelMemory<T> {
     if (!url.startsWith(webSocketUrlMemoryScheme)) {
       throw 'unsupported scheme';
     }
-    final port = parseInt(url.replaceFirst(webSocketUrlMemoryScheme + ':', ''));
+    final port = parseInt(url.replaceFirst('$webSocketUrlMemoryScheme:', ''));
 
     // 2019-01-23
     // Don't delay anymore
