@@ -15,7 +15,7 @@ dependencies:
       path: web_socket
       ref: dart2_3
     version: '>=0.2.2'
-
+  web_socket_channel:
 dev_dependencies:
   test: ">=1.0.0"
   dev_test: any

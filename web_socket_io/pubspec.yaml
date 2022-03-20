@@ -17,6 +17,7 @@ dependencies:
     version: '>=0.2.2'
   shelf: '>=0.7.3'
   shelf_web_socket: '>=0.2.2'
+  web_socket_channel:
 dev_dependencies:
   test: ">=1.2.0"
   dev_test: any
