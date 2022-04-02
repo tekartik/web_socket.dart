@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:shelf/shelf_io.dart' as shelf_io;
 import 'package:shelf_web_socket/shelf_web_socket.dart';
-
 // ignore: implementation_imports
 import 'package:tekartik_web_socket/web_socket.dart';
 import 'package:web_socket_channel/io.dart';
@@ -12,7 +11,8 @@ import 'package:web_socket_channel/web_socket_channel.dart' as native;
 class _WebSocketChannelServerFactoryIo
     implements WebSocketChannelServerFactory {
   @override
-  Future<WebSocketChannelServer<T>> serve<T>({address, int? port}) async {
+  Future<WebSocketChannelServer<T>> serve<T>(
+      {Object? address /* Address or String */, int? port}) async {
     port ??= 0;
     address ??= InternetAddress.anyIPv6;
     var server = _WebSocketChannelServerIo<T>(address, port);
@@ -30,7 +30,7 @@ class _WebSocketChannelServerIo<T> implements WebSocketChannelServer<T> {
   List<WebSocketChannel> channels = [];
 
   //static DevFlag debug = new DevFlag('debug');
-  Object? address;
+  Object address;
 
   // Port will changed when serving
   @override
