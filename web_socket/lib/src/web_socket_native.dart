@@ -50,6 +50,8 @@ class WebSocketChannelNative<T> extends StreamChannelMixin<T>
     }, onError: (Object e, StackTrace st) {
       streamController.addError(e, st);
     });
+    // Eat error we'll get it later...
+    nativeChannel.ready.onError((Object error, st) {});
   }
 
   StreamSink<T>? _sink;
@@ -66,4 +68,7 @@ class WebSocketChannelNative<T> extends StreamChannelMixin<T>
 
   @override
   String toString() => nativeChannel.toString();
+
+  @override
+  Future<void> get ready => nativeChannel.ready;
 }

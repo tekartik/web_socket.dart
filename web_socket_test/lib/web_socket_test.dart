@@ -114,14 +114,13 @@ void webSocketTestMain(WebSocketChannelFactory channelFactory) {
       expect(failed, isTrue);
     });
 
-    test('failure_on_done', () async {
+    test('failure_ready', () async {
       var failed = false;
+      WebSocketChannel wsClient;
+      wsClient =
+          channelFactory.client.connect('${channelFactory.scheme}://dummy');
       try {
-        WebSocketChannel wsClient;
-        wsClient =
-            channelFactory.client.connect('${channelFactory.scheme}://dummy');
-
-        await wsClient.stream.toList();
+        await wsClient.ready;
       } catch (e) {
         //devPrint('Err: $e');
         failed = true;
@@ -130,17 +129,36 @@ void webSocketTestMain(WebSocketChannelFactory channelFactory) {
       expect(failed, isTrue);
     });
 
+    test('failure_on_done', () async {
+      var failed = false;
+      WebSocketChannel wsClient;
+      wsClient =
+          channelFactory.client.connect('${channelFactory.scheme}://dummy');
+      try {
+        await wsClient.stream.toList();
+      } catch (e) {
+        //devPrint('Err: $e');
+        failed = true;
+      }
+
+      // eat the completed error for memory testing.
+      await wsClient.ready.catchError((_) {});
+      expect(failed, isTrue);
+    });
+
     test('failure', () async {
       WebSocketChannel wsClient;
       wsClient =
           channelFactory.client.connect('${channelFactory.scheme}://dummy');
 
-      var completer = Completer<void>();
+      var completer = Completer<void>.sync();
       wsClient.stream.listen((_) {}, onError: (Object e) {
         print(e);
         completer.complete();
       });
       await completer.future;
+      // eat the completed error for memory testing.
+      await wsClient.ready.catchError((_) {});
     });
   });
 }

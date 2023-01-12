@@ -10,7 +10,10 @@ export 'web_socket_memory.dart'
         webSocketChannelServerFactoryMemory;
 export 'web_socket_native.dart' show WebSocketChannelNative;
 
-abstract class WebSocketChannel<T> extends StreamChannelMixin<T> {}
+abstract class WebSocketChannel<T> extends StreamChannelMixin<T> {
+  // Ready extension
+  Future<void> get ready => Future.value();
+}
 
 abstract class WebSocketChannelFactory {
   String get scheme;
