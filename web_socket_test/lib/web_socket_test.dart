@@ -115,12 +115,12 @@ void webSocketTestMain(WebSocketChannelFactory channelFactory) {
     });
 
     test('failure_on_done', () async {
-      WebSocketChannel wsClient;
-      wsClient =
-          channelFactory.client.connect('${channelFactory.scheme}://dummy');
-
       var failed = false;
       try {
+        WebSocketChannel wsClient;
+        wsClient =
+            channelFactory.client.connect('${channelFactory.scheme}://dummy');
+
         await wsClient.stream.toList();
       } catch (e) {
         //devPrint('Err: $e');
