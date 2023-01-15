@@ -174,6 +174,9 @@ class MemoryWebSocketServerChannel<T> extends WebSocketChannelMemory<T> {
     super._close();
     channelServer.channels.remove(this);
   }
+
+  @override
+  Future<void> get ready => Future.value();
 }
 
 class MemoryWebSocketClientChannel<T> extends WebSocketChannelMemory<T> {
@@ -182,10 +185,13 @@ class MemoryWebSocketClientChannel<T> extends WebSocketChannelMemory<T> {
   @override
   WebSocketChannelMemory? get link => server;
 
+  // Ready completer.
+  final Completer<void> _readyCompleter = Completer<void>();
+
   MemoryWebSocketClientChannel.connect(String url) {
     this.url = url;
     if (!url.startsWith(webSocketUrlMemoryScheme)) {
-      throw 'unsupported scheme';
+      throw Exception('unsupported scheme');
     }
     final port = parseInt(url.replaceFirst('$webSocketUrlMemoryScheme:', ''));
 
@@ -207,16 +213,23 @@ class MemoryWebSocketClientChannel<T> extends WebSocketChannelMemory<T> {
         ..client = this;
       server = serverChannel;
 
+      _readyCompleter.complete();
       // notify
       channelServer.streamController.add(serverChannel);
     } else {
-      streamController.addError('cannot connect ${this.url}');
-      close();
+      Future<void>.value().then((_) async {
+        var error = Exception('cannot connect ${this.url}');
+        streamController.addError(error);
+        _readyCompleter.completeError(error);
+        await close();
+      });
       //throw 'cannot connect ${this.url}';
     }
 
     // });
   }
+  @override
+  Future<void> get ready => _readyCompleter.future;
 }
 
 abstract class WebSocketChannelMemory<T> extends StreamChannelMixin<T>
