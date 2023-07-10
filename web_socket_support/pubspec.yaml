@@ -6,7 +6,7 @@ publish_to: none
 #
 
 environment:
-  sdk: '>=2.18.0 <4.0.0'
+  sdk: '>=3.0.0 <4.0.0'
 
 #dependencies:
 #  path: ^1.6.0
@@ -17,6 +17,6 @@ dev_dependencies:
   tekartik_common_utils:
     git:
       url: https://github.com/tekartik/common_utils.dart
-      ref: dart2_3
+      ref: dart3a
   process_run:
   path:
