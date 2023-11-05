@@ -4,7 +4,7 @@ import 'package:stream_channel/stream_channel.dart';
 import 'package:tekartik_web_socket/web_socket.dart';
 import 'package:web_socket_channel/web_socket_channel.dart' as native;
 
-class _SinkNative<T> extends StreamSink<T> {
+class _SinkNative<T> implements StreamSink<T> {
   final native.WebSocketSink nativeInstance;
 
   _SinkNative(this.nativeInstance);
