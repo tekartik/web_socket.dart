@@ -18,7 +18,7 @@ dependencies:
   web_socket_channel:
 dev_dependencies:
   test: ">=1.0.0"
-  dev_test: any
+  dev_build: any
   build_web_compilers: '>=0.4.0'
   process_run:
   tekartik_web_socket_test:

@@ -3,32 +3,28 @@
 version: 2
 
 enable-beta-ecosystems: true
+
 updates:
   - package-ecosystem: "pub"
     directory: "web_socket"
     schedule:
       interval: "monthly"
-
   - package-ecosystem: "pub"
     directory: "web_socket_browser"
     schedule:
       interval: "monthly"
-
   - package-ecosystem: "pub"
     directory: "web_socket_io"
     schedule:
       interval: "monthly"
-
   - package-ecosystem: "pub"
     directory: "web_socket_support"
     schedule:
       interval: "monthly"
-
   - package-ecosystem: "pub"
     directory: "web_socket_test"
     schedule:
       interval: "monthly"
-
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:

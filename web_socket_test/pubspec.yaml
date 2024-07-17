@@ -19,7 +19,7 @@ dependencies:
   test:
 
 dev_dependencies:
-  dev_test: any
+  dev_build: any
   collection: '>=1.14.10'
 
 dependency_overrides:
