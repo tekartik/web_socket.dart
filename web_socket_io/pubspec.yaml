@@ -20,7 +20,7 @@ dependencies:
   web_socket_channel:
 dev_dependencies:
   test: ">=1.2.0"
-  dev_test: any
+  dev_build: any
   collection: '>=1.14.10'
   path: '>=1.6.1'
   process_run: '>=0.10.3'
