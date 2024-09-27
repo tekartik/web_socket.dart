@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:tekartik_web_socket/web_socket.dart';
 import 'package:test/test.dart';
-
+export 'package:tekartik_web_socket/web_socket.dart';
 //import 'package:tekartik_serial_wss_client/channel/channel.dart';
 
 void main() {
