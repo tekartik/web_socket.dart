@@ -42,10 +42,9 @@ class _WebSocketChannelServerIo<T> implements WebSocketChannelServer<T> {
   }
 
   Future serve() async {
-    var handler =
-        webSocketHandler((native.WebSocketChannel nativeWebSocketChannel) {
-      final webSocketChannel =
-          WebSocketChannelNative<T>(nativeWebSocketChannel);
+    var handler = webSocketHandler(
+        (native.WebSocketChannel webSocket, String? subprotocol) {
+      final webSocketChannel = WebSocketChannelNative<T>(webSocket);
 
       // add to our list for cleanup
       channels.add(webSocketChannel);
