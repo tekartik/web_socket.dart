@@ -1,0 +1,10 @@
+name: _
+publish_to: none
+environment:
+  sdk: ^3.6.0
+workspace:
+  - web_socket
+  - web_socket_browser
+  - web_socket_io
+  - web_socket_support
+  - web_socket_test
