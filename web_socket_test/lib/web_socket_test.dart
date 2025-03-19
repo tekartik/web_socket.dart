@@ -11,6 +11,18 @@ void main() {
 
 void webSocketTestMain(WebSocketChannelFactory channelFactory) {
   group('channel', () {
+    test('no server', () async {
+      try {
+        var channel =
+            channelFactory.client.connect<String>('ws://localhost:9999');
+        await channel.ready;
+        fail('should fail');
+      } catch (e) {
+        expect(e, isNot(isA<TestFailure>()));
+
+        // rethrow;
+      }
+    });
     group('simple', () {
       late WebSocketChannelServer<List<int>> server;
       WebSocketChannel<List<int>> wsClient;
