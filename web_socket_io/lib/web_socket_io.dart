@@ -1,6 +1,6 @@
 export 'package:tekartik_web_socket/web_socket.dart';
 
-export 'src/web_socket_io.dart'
+export 'src/platform/platform.dart'
     show
         webSocketChannelFactoryIo,
         webSocketChannelClientFactoryIo,
