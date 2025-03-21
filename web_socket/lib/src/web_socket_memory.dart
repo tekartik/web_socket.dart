@@ -36,7 +36,7 @@ WebSocketChannelFactoryMemory? _memoryWebSocketChannelFactory;
 WebSocketChannelFactoryMemory get webSocketChannelFactoryMemory =>
     _memoryWebSocketChannelFactory ??= WebSocketChannelFactoryMemory();
 
-String webSocketUrlMemoryScheme = 'memory';
+String webSocketUrlMemoryScheme = 'ws';
 
 // The one to use
 // will redirect memory: to memory

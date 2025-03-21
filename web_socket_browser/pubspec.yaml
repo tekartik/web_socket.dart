@@ -9,6 +9,10 @@ environment:
   sdk: ^3.6.0
 
 dependencies:
+  tekartik_common_utils:
+    git:
+      url: https://github.com/tekartik/common_utils.dart
+      ref: dart3a
   tekartik_web_socket:
     git:
       url: https://github.com/tekartik/web_socket.dart
