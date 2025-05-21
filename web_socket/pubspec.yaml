@@ -6,7 +6,7 @@ publish_to: none
 #author: alex <email@example.com>
 
 environment:
-  sdk: ^3.6.0
+  sdk: ^3.7.0
 
 dependencies:
   http: any
@@ -20,7 +20,7 @@ dependencies:
 
 dev_dependencies:
   test: ">=1.24.0"
-  dev_build: ">=1.1.0+2"
+  dev_build: ">=1.1.2"
   process_run: ">=1.2.1+1"
   tekartik_web_socket_test:
     git:
