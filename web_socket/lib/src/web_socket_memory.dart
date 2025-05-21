@@ -27,8 +27,10 @@ class WebSocketChannelFactoryMemory extends WebSocketChannelFactory {
   String get scheme => webSocketUrlMemoryScheme;
 
   WebSocketChannelFactoryMemory()
-      : super(webSocketChannelServerFactoryMemory,
-            webSocketChannelClientFactoryMemory);
+    : super(
+        webSocketChannelServerFactoryMemory,
+        webSocketChannelClientFactoryMemory,
+      );
 }
 
 WebSocketChannelFactoryMemory? _memoryWebSocketChannelFactory;
@@ -41,8 +43,8 @@ String webSocketUrlMemoryScheme = 'ws';
 // The one to use
 // will redirect memory: to memory
 WebSocketChannelClientFactory smartWebSocketChannelClientFactory(
-        WebSocketChannelClientFactory defaultFactory) =>
-    WebSocketChannelClientFactoryMerged(defaultFactory);
+  WebSocketChannelClientFactory defaultFactory,
+) => WebSocketChannelClientFactoryMerged(defaultFactory);
 
 // Global list of servers
 class WebSocketDataMemory {

@@ -6,7 +6,7 @@ publish_to: none
 #author: alex <email@example.com>
 
 environment:
-  sdk: ^3.6.0
+  sdk: ^3.7.0
 
 dependencies:
   tekartik_web_socket:
@@ -24,7 +24,7 @@ dependencies:
       ref: dart3a
 dev_dependencies:
   test: ">=1.24.0"
-  dev_build: ">=1.1.0+2"
+  dev_build: ">=1.1.2"
   collection: ">=1.18.0"
   path: ">=1.9.0"
   process_run: ">=1.2.1+1"

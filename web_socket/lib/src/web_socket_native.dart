@@ -42,14 +42,18 @@ class WebSocketChannelNative<T> extends StreamChannelMixin<T>
   Completer doneCompleter = Completer();
 
   WebSocketChannelNative(this.nativeChannel) {
-    nativeChannel.stream.listen((data) {
-      streamController.add(data as T);
-    }, onDone: () {
-      doneCompleter.complete();
-      streamController.close();
-    }, onError: (Object e, StackTrace st) {
-      streamController.addError(e, st);
-    });
+    nativeChannel.stream.listen(
+      (data) {
+        streamController.add(data as T);
+      },
+      onDone: () {
+        doneCompleter.complete();
+        streamController.close();
+      },
+      onError: (Object e, StackTrace st) {
+        streamController.addError(e, st);
+      },
+    );
     // Eat error we'll get it later...
     nativeChannel.ready.onError((Object error, st) {});
   }

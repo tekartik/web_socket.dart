@@ -11,8 +11,10 @@ import 'package:web_socket_channel/web_socket_channel.dart' as native;
 class _WebSocketChannelServerFactoryIo
     implements WebSocketChannelServerFactory {
   @override
-  Future<WebSocketChannelServer<T>> serve<T>(
-      {Object? address /* Address or String */, int? port}) async {
+  Future<WebSocketChannelServer<T>> serve<T>({
+    Object? address /* Address or String */,
+    int? port,
+  }) async {
     port ??= 0;
     address ??= InternetAddress.anyIPv6;
     var server = _WebSocketChannelServerIo<T>(address, port);
@@ -42,8 +44,10 @@ class _WebSocketChannelServerIo<T> implements WebSocketChannelServer<T> {
   }
 
   Future serve() async {
-    var handler = webSocketHandler(
-        (native.WebSocketChannel webSocket, String? subprotocol) {
+    var handler = webSocketHandler((
+      native.WebSocketChannel webSocket,
+      String? subprotocol,
+    ) {
       final webSocketChannel = WebSocketChannelNative<T>(webSocket);
 
       // add to our list for cleanup
@@ -85,7 +89,7 @@ class _WebSocketChannelServerIo<T> implements WebSocketChannelServer<T> {
 
   @override
   String get url => 'ws://localhost:$port';
-// 'ws://${httpServer.address.host}:${port}'; not working
+  // 'ws://${httpServer.address.host}:${port}'; not working
 }
 
 class WebSocketClientChannelFactoryIo extends WebSocketChannelClientFactory {
@@ -106,7 +110,7 @@ class WebSocketChannelFactoryIo extends WebSocketChannelFactory {
   String get scheme => webSocketUrlScheme;
 
   WebSocketChannelFactoryIo()
-      : super(webSocketChannelServerFactoryIo, webSocketChannelClientFactoryIo);
+    : super(webSocketChannelServerFactoryIo, webSocketChannelClientFactoryIo);
 }
 
 final WebSocketChannelFactoryIo webSocketChannelFactoryIo =
