@@ -13,7 +13,6 @@ dependencies:
   tekartik_common_utils:
     git:
       url: https://github.com/tekartik/common_utils.dart
-      ref: dart3a
     version: '>=0.9.3+2'
   web_socket_channel: '>=2.4.0'
   stream_channel: '>=2.1.0-0'
@@ -25,6 +24,5 @@ dev_dependencies:
   tekartik_web_socket_test:
     git:
       url: https://github.com/tekartik/web_socket.dart
-      ref: dart3a
       path: web_socket_test
 resolution: workspace

@@ -17,7 +17,6 @@ dev_dependencies:
   tekartik_common_utils:
     git:
       url: https://github.com/tekartik/common_utils.dart
-      ref: dart3a
   process_run: ">=1.2.1+1"
   path: ">=1.9.0"
 resolution: workspace

@@ -9,12 +9,11 @@ Dart Abstraction on WebSocket
 pubspec.yaml
 
 ````yaml
-dependencies
+dependencies:
   tekartik_web_socket:
     git:
       url: https://github.com/tekartik/web_socket.dart
       path: web_socket
-      ref: dart3a
     version: '>=0.1.0'
 ````
 
@@ -28,7 +27,6 @@ dependencies
     git:
       url: https://github.com/tekartik/web_socket.dart
       path: web_socket_io
-      ref: dart3a
     version: '>=0.1.0'
 ````
 
@@ -42,6 +40,5 @@ pubspec.yaml
     git:
       url: https://github.com/tekartik/web_socket.dart
       path: web_socket_browser
-      ref: dart3a
     version: '>=0.1.0'
 ````
