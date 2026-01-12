@@ -25,6 +25,7 @@ class _WebSocketChannelServerFactoryIo
 
 bool _debug = false;
 
+/// Io web socket channel server factory.
 WebSocketChannelServerFactory webSocketChannelServerFactoryIo =
     _WebSocketChannelServerFactoryIo();
 
@@ -55,6 +56,7 @@ class _WebSocketChannelServerIo<T> implements WebSocketChannelServer<T> {
 
       streamController.add(webSocketChannel);
       if (_debug) {
+        // ignore: avoid_print
         print('[_IoWebSocketChannelServer] adding channel: $webSocketChannel');
       }
       // handle when the channel is done
@@ -66,7 +68,9 @@ class _WebSocketChannelServerIo<T> implements WebSocketChannelServer<T> {
     httpServer = await shelf_io.serve(handler, address, port);
     port = httpServer.port;
     if (_debug) {
+      // ignore: avoid_print
       print(httpServer.address);
+      // ignore: avoid_print
       print('Serving at $url');
     }
   }
@@ -92,6 +96,7 @@ class _WebSocketChannelServerIo<T> implements WebSocketChannelServer<T> {
   // 'ws://${httpServer.address.host}:${port}'; not working
 }
 
+/// Io web socket client channel factory.
 class WebSocketClientChannelFactoryIo extends WebSocketChannelClientFactory {
   @override
   WebSocketChannel<T> connect<T>(String url) {
@@ -101,17 +106,21 @@ class WebSocketClientChannelFactoryIo extends WebSocketChannelClientFactory {
 
 WebSocketClientChannelFactoryIo? _webSocketClientChannelFactoryIo;
 
+/// Io web socket channel client factory.
 WebSocketClientChannelFactoryIo get webSocketChannelClientFactoryIo =>
     _webSocketClientChannelFactoryIo ??= WebSocketClientChannelFactoryIo();
 
 // both client/server
+/// Io web socket channel factory (both client and server).
 class WebSocketChannelFactoryIo extends WebSocketChannelFactory {
   @override
   String get scheme => webSocketUrlScheme;
 
+  /// Io web socket channel factory.
   WebSocketChannelFactoryIo()
     : super(webSocketChannelServerFactoryIo, webSocketChannelClientFactoryIo);
 }
 
+/// Io web socket channel factory.
 final WebSocketChannelFactoryIo webSocketChannelFactoryIo =
     WebSocketChannelFactoryIo();

@@ -34,22 +34,33 @@ abstract class WebSocketChannelFactory {
 /// The URL scheme used by the WebSocket protocol.
 String webSocketUrlScheme = 'ws';
 
+/// The URL scheme used by the secure WebSocket protocol.
+String webSocketUrlSecureScheme = 'wss';
+
 /// Server factory
+/// Web socket channel server factory.
 abstract class WebSocketChannelServerFactory {
+  /// Serve a web socket server at the given [address] and [port].
   Future<WebSocketChannelServer<T>> serve<T>({Object? address, int? port});
 }
 
+/// Web socket channel server.
 abstract class WebSocketChannelServer<T> {
-  // assigned port
+  /// Port assigned to the server.
   int get port;
 
+  /// URL the server is listening on.
   String get url;
 
+  /// Stream of connected channels.
   Stream<WebSocketChannel<T>> get stream;
 
+  /// Close the server.
   Future close();
 }
 
+/// Web socket channel client factory.
 abstract class WebSocketChannelClientFactory {
+  /// Connect to the given [url].
   WebSocketChannel<T> connect<T>(String url);
 }

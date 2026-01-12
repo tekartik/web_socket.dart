@@ -33,14 +33,19 @@ class _SinkNative<T> implements StreamSink<T> {
   Future get done => nativeInstance.done;
 }
 
+/// Native web socket channel.
 class WebSocketChannelNative<T> extends StreamChannelMixin<T>
     implements WebSocketChannel<T> {
+  /// Internal stream controller.
   StreamController<T> streamController = StreamController<T>();
 
+  /// Native channel.
   final native.WebSocketChannel nativeChannel;
 
+  /// Done completer.
   Completer doneCompleter = Completer();
 
+  /// Create from a native channel.
   WebSocketChannelNative(this.nativeChannel) {
     nativeChannel.stream.listen(
       (data) {
@@ -66,11 +71,11 @@ class WebSocketChannelNative<T> extends StreamChannelMixin<T>
   @override
   Stream<T> get stream => streamController.stream;
 
-  // when the channel is done
-  // used internally
+  /// Future that completes when the channel is closed.
   Future get done => doneCompleter.future;
 
   @override
+  /// Native channel string representation.
   String toString() => nativeChannel.toString();
 
   @override
