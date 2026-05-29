@@ -6,7 +6,7 @@ publish_to: none
 #author: alex <email@example.com>
 
 environment:
-  sdk: ^3.9.0
+  sdk: ^3.12.0
 
 dependencies:
   tekartik_common_utils:
@@ -19,9 +19,9 @@ dependencies:
     version: '>=0.2.2'
   web_socket_channel:
 dev_dependencies:
-  test: ">=1.24.0"
-  dev_build: ">=1.1.2"
-  build_web_compilers: ">=4.0.11"
+  test: ">=1.31.0"
+  dev_build: ">=1.1.7+3"
+  build_web_compilers: ">=4.4.19"
   process_run: ">=1.2.1+1"
   tekartik_web_socket_test:
     git:

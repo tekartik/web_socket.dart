@@ -77,7 +77,7 @@ class WebSocketDataMemory {
   /// Check if a port is available.
   int checkPort(int port) {
     if (servers.keys.contains(port)) {
-      throw 'port $port used';
+      throw StateError('port $port used');
     }
     if (port == 0) {
       port = ++_lastPortId;
