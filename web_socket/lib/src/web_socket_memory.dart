@@ -87,6 +87,7 @@ class WebSocketDataMemory {
 }
 
 /*
+/// Class representing [MemoryServer].
 class MemoryServer {
   List<WebSocketChannelServer> servers;
 
@@ -248,6 +249,7 @@ class MemoryWebSocketClientChannel<T> extends WebSocketChannelMemory<T> {
         var error = Exception('cannot connect ${this.url}');
         streamController.addError(error);
         _readyCompleter.completeError(error);
+
         await close();
       });
       //throw 'cannot connect ${this.url}';
@@ -292,6 +294,7 @@ abstract class WebSocketChannelMemory<T> extends StreamChannelMixin<T>
     if (!_closing) {
       _closing = true;
       sink._close();
+
       unawaited(streamController.close());
     }
   }
