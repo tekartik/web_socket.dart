@@ -29,7 +29,7 @@ void webSocketTestMain(WebSocketChannelFactory channelFactory) {
     });
     group('simple', () {
       late WebSocketChannelServer<List<int>> server;
-      WebSocketChannel<List<int>> wsClient;
+      late WebSocketChannel<List<int>> wsClient;
       late WebSocketChannel<List<int>> wsServer;
 
       Future simpleTest(Future Function() close) async {
@@ -88,19 +88,19 @@ void webSocketTestMain(WebSocketChannelFactory channelFactory) {
 
       test('close_server', () async {
         await simpleTest(() async {
-          await await server.close();
+          await server.close();
         });
       });
 
       test('close_ws_server', () async {
         await simpleTest(() async {
-          await await wsServer.sink.close();
+          await wsServer.sink.close();
         });
       });
 
       test('close_ws_client', () async {
         await simpleTest(() async {
-          await await wsServer.sink.close();
+          await wsClient.sink.close();
         });
       });
 
