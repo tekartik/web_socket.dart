@@ -80,7 +80,10 @@ class WebSocketDataMemory {
       throw StateError('port $port used');
     }
     if (port == 0) {
-      port = ++_lastPortId;
+      // Skip the ports already used by an explicit port
+      do {
+        port = ++_lastPortId;
+      } while (servers.containsKey(port));
     }
     return port;
   }
@@ -183,8 +186,8 @@ class MemoryWebSocketServerChannel<T> extends WebSocketChannelMemory<T> {
   /// Associated server.
   final WebSocketChannelServerMemory channelServer;
 
-  /// Associated client.
-  MemoryWebSocketClientChannel<T?>? client;
+  /// Associated client (its type argument can differ from the server one).
+  MemoryWebSocketClientChannel<Object?>? client;
 
   /// Create a server channel.
   MemoryWebSocketServerChannel(this.channelServer) {
@@ -206,8 +209,8 @@ class MemoryWebSocketServerChannel<T> extends WebSocketChannelMemory<T> {
 
 /// Memory web socket client channel.
 class MemoryWebSocketClientChannel<T> extends WebSocketChannelMemory<T> {
-  /// Associated server channel.
-  MemoryWebSocketServerChannel<T?>? server;
+  /// Associated server channel (its type argument is the server one).
+  MemoryWebSocketServerChannel<Object?>? server;
 
   @override
   WebSocketChannelMemory? get link => server;
@@ -236,9 +239,8 @@ class MemoryWebSocketClientChannel<T> extends WebSocketChannelMemory<T> {
     final channelServer =
         webSocketMemory.servers[port] as WebSocketChannelServerMemory?;
     if (channelServer != null) {
-      // connect them
-      final serverChannel = MemoryWebSocketServerChannel<T>(channelServer)
-        ..client = this;
+      // connect them, the server side channel has the server type
+      final serverChannel = channelServer._newServerChannel()..client = this;
       server = serverChannel;
 
       _readyCompleter.complete();
@@ -309,8 +311,11 @@ abstract class WebSocketChannelMemory<T> extends StreamChannelMixin<T>
   }
 }
 
+const _memoryUrlPrefix = 'memory:';
+
 // Handle both url and 'memory:url'
-/// Merged web socket channel client factory (handle memory: too).
+/// Merged web socket channel client factory: `memory:<memory server url>`
+/// goes to the memory factory, any other url to [defaultFactory].
 class WebSocketChannelClientFactoryMerged
     extends WebSocketChannelClientFactory {
   /// Default factory to use.
@@ -321,8 +326,11 @@ class WebSocketChannelClientFactoryMerged
 
   @override
   WebSocketChannel<T> connect<T>(String url) {
-    if (url.startsWith('memory:')) {
-      return webSocketChannelClientFactoryMemory.connect(url);
+    if (url.startsWith(_memoryUrlPrefix)) {
+      // `memory:` + the memory server url (`ws:<port>`)
+      return webSocketChannelClientFactoryMemory.connect(
+        url.substring(_memoryUrlPrefix.length),
+      );
     }
     return defaultFactory.connect(url);
   }
@@ -348,13 +356,18 @@ class WebSocketChannelServerMemory<T> implements WebSocketChannelServer<T> {
     streamController = StreamController();
   }
 
+  /// A new server side channel, typed as the server.
+  MemoryWebSocketServerChannel<T> _newServerChannel() =>
+      MemoryWebSocketServerChannel<T>(this);
+
   @override
   Future close() async {
-    // Close our stream
-    await streamController.close();
-
     // remove from our table
     webSocketMemory.removeServer(this);
+
+    // Close our stream, not awaited: the close of a single subscription
+    // controller never completes if it was never listened to.
+    unawaited(streamController.close());
 
     // kill all connections
     final channels = List<WebSocketChannelMemory>.from(this.channels);

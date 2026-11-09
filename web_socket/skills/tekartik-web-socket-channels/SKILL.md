@@ -80,15 +80,17 @@ real ones live in `tekartik_web_socket_io` (dart:io + shelf),
   `webSocketChannelClientFactoryMemory.connect<T>(server.url)`, or the combined
   `webSocketChannelFactoryMemory`. The memory url is `ws:<port>` (scheme `ws`,
   no host) - always pass `server.url` around instead of building it. Serving a
-  port already in use throws a `StateError`; connecting to a port with no
-  server fails on `ready` and adds the error to `stream`.
+  port already in use throws a `StateError` (a dynamic port skips the used
+  ones); connecting to a port with no server fails on `ready` and adds the
+  error to `stream`. As on io, the client type argument does not have to
+  match the server one (`connect<Object?>` to a `serve<String>` server).
 * `webSocketMemory` is the global registry of the memory servers
   (`servers`, `channels`, `checkPort`). Only touch it to debug a leaked
   server; a test closes its server instead.
 * `smartWebSocketChannelClientFactory(defaultFactory)` returns a factory that
-  routes urls starting with `memory:` to the memory factory and everything else
-  to `defaultFactory`. Since memory urls are `ws:<port>`, prefer injecting
-  `webSocketChannelClientFactoryMemory` explicitly in tests.
+  routes `memory:<memory server url>` (`'memory:${server.url}'`) to the memory
+  factory and everything else to `defaultFactory`. In tests, prefer injecting
+  `webSocketChannelClientFactoryMemory` explicitly.
 * Implementing a new platform: extend `WebSocketChannelClientFactory` and
   return `WebSocketChannelNative<T>(nativeChannel)`, which adapts a
   `package:web_socket_channel` channel (its `ready`, `stream`, `sink`, plus a
