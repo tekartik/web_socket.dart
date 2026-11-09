@@ -49,8 +49,13 @@ that calls `webSocketTestMain(factory)` and gets the whole suite.
 * Add `@TestOn('vm')` (before `library;`) for an implementation that needs
   dart:io, such as `tekartik_web_socket_io`. The memory factory passes on the
   VM and in the browser (`dart test -p chrome`).
-* What the suite declares (group `channel`) and therefore what the
-  implementation must honour:
+* What the suite declares (groups `server` and `channel`) and therefore what
+  the implementation must honour:
+  - `server`: `close()` with no listener on `stream` completes; `stream` is
+    done once the server is closed; two `serve()` without port get different
+    ports and urls; a `serve<String>()` server accepts a
+    `connect<Object?>` client (each side keeps its own type). 10 s timeout
+    each.
   - `no server`: `client.connect<String>('ws://localhost:9999')` then
     `await channel.ready` must throw (not a `TestFailure`).
   - `simple`: `server.serve()` with no argument, `client.connect(server.url)`,
@@ -65,13 +70,14 @@ that calls `webSocketTestMain(factory)` and gets the whole suite.
   - `failure_ready`, `failure_on_done`, `failure`: connecting to
     `'${factory.scheme}://dummy'` must fail on `ready`, add the error to
     `stream` and complete it.
-* So a new implementation must: pick a free port when `serve()` gets no
-  `port`, expose a `url` its own client can `connect` to, deliver messages
+* So a new implementation must: end `server.stream` on `close()`, pick a
+  free unused port when `serve()` gets no `port`, expose a `url` its own client can `connect` to, deliver messages
   buffered before the peer listens, report connection failures on both `ready`
   and `stream`, and throw right away on an unusable url.
-* The suite closes every server and channel it creates; it does not need a
-  network besides localhost, and it never uses `setUpAll`, so it can be nested
-  in a `group` with other tests.
+* The suite does not need a network besides localhost and never uses
+  `setUpAll`, so it can be nested in a `group` with other tests. Some older
+  channel tests (`close_ws_server`, `close_ws_client`, `failure*`) leave their
+  server or client open until the process ends.
 * `package:tekartik_web_socket_test/web_socket_test.dart` also declares its own
   `main()` running the suite on the memory factory - that is for the package's
   own checks, do not call it.

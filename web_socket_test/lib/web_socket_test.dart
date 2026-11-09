@@ -13,6 +13,50 @@ void main() {
 }
 
 void webSocketTestMain(WebSocketChannelFactory channelFactory) {
+  group('server', () {
+    const timeout = Timeout(Duration(seconds: 10));
+    test('close without listening', () async {
+      var server = await channelFactory.server.serve<String>();
+      await server.close();
+    }, timeout: timeout);
+
+    test('stream done after close', () async {
+      var server = await channelFactory.server.serve<String>();
+      var done = Completer<void>();
+      server.stream.listen((_) {}, onDone: done.complete);
+      await server.close();
+      await done.future;
+    }, timeout: timeout);
+
+    test('dynamic ports differ', () async {
+      var server1 = await channelFactory.server.serve<String>();
+      var server2 = await channelFactory.server.serve<String>();
+      try {
+        expect(server1.port, isNot(server2.port));
+        expect(server1.url, isNot(server2.url));
+      } finally {
+        await server1.close();
+        await server2.close();
+      }
+    }, timeout: timeout);
+
+    test('client type differs from the server type', () async {
+      var server = await channelFactory.server.serve<String>();
+      try {
+        var client = channelFactory.client.connect<Object?>(server.url);
+        await client.ready;
+        var serverChannel = await server.stream.first;
+        client.sink.add('hi');
+        expect(await serverChannel.stream.first, 'hi');
+        var clientFirst = client.stream.first;
+        serverChannel.sink.add('hello');
+        expect(await clientFirst, 'hello');
+        await client.sink.close();
+      } finally {
+        await server.close();
+      }
+    }, timeout: timeout);
+  });
   group('channel', () {
     test('no server', () async {
       try {

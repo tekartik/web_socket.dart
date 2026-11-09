@@ -51,6 +51,11 @@ class _WebSocketChannelServerIo<T> implements WebSocketChannelServer<T> {
     ) {
       final webSocketChannel = WebSocketChannelNative<T>(webSocket);
 
+      if (streamController.isClosed) {
+        // Connected while closing
+        unawaited(webSocketChannel.sink.close());
+        return;
+      }
       // add to our list for cleanup
       channels.add(webSocketChannel);
 
@@ -83,6 +88,10 @@ class _WebSocketChannelServerIo<T> implements WebSocketChannelServer<T> {
   @override
   Future close() async {
     await httpServer.close(force: true);
+
+    // Ends [stream], not awaited: the close of a single subscription
+    // controller never completes if it was never listened to.
+    unawaited(streamController.close());
 
     // copy the channels remaining list and close them
     final channels = List<WebSocketChannel>.from(this.channels);

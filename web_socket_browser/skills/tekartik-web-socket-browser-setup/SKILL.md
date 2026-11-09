@@ -54,11 +54,15 @@ cannot serve. Importing it is safe everywhere, but the getter throws
   elsewhere.
 * `webSocketChannelClientFactoryBrowser.connect<T>(url)` returns a
   `WebSocketChannel<T>` synchronously, before the socket is open. Pass the type
-  argument: `connect<String>` for a text/JSON protocol, `connect<Object?>` when
-  the peer may also send binary frames (the browser delivers them as a
-  `ByteBuffer`/`Blob`, not as `List<int>`).
+  argument: `connect<String>` for a text/JSON protocol, `connect<List<int>>`
+  for binary frames, `connect<Object?>` when the peer sends both. Binary frames
+  are received as `Uint8List`; a `List<int>` given to `sink.add` is sent as
+  bytes (converted to a `Uint8List`, the raw browser `WebSocket` would send a
+  plain list as the text `1,2,3`).
 * `await channel.ready` in a `try`/`catch`: a refused connection is reported
-  there and on `channel.stream` (`onError`), never by `connect`. Read with a
+  there and on `channel.stream` (`onError`), not by `connect`: unlike io, even
+  `connect('dummy')` does not throw, the browser resolves it against the
+  page url. Read with a
   single `channel.stream.listen(...)` (single subscription stream), write with
   `channel.sink.add(...)`, finish with `await channel.sink.close()`.
 * Browser constraints: a page served over `https` (or a Flutter web release
@@ -67,11 +71,12 @@ cannot serve. Importing it is safe everywhere, but the getter throws
   available through this factory. Cross origin is controlled by the server, not
   by the client. There is no automatic reconnect: on `onDone`, create a new
   channel after a delay.
-* Testing: browser tests need `dev_dependencies` on `test` and
-  `build_web_compilers`, and run with `dart test -p chrome`. The real factory
-  needs a server, so test application logic against
-  `webSocketChannelClientFactoryMemory` (re-exported here), which also runs in
-  the browser. The full conformance suite of `tekartik_web_socket_test`
+* Testing: browser tests need a `dev_dependencies` on `test` and run with
+  `dart test -p chrome` (add `-c dart2wasm` for wasm). Test application logic
+  against `webSocketChannelClientFactoryMemory` (re-exported here), which also
+  runs in the browser; to test the real browser client, start a `dart:io` echo
+  server in the VM with `spawnHybridUri` (the package's own
+  `test/web_socket_browser_test.dart` does). The full conformance suite of `tekartik_web_socket_test`
   (`webSocketTestMain`) needs both sides, so it can only be run with the memory
   factory here, not with the browser one.
 * Anti-patterns: importing `web_socket_browser.dart` in shared/VM code and

@@ -62,7 +62,8 @@ can *serve*. Importing it is safe everywhere, but the getters throw
   for a remote client).
 * `server.stream` emits one `WebSocketChannel<T>` per connected client - listen
   right after `serve` returns. `await server.close()` closes the `HttpServer`
-  (forced) and every client channel still open.
+  (forced) and every client channel still open, and ends `server.stream`
+  (its `onDone` is called, an `await for` on it completes).
 * There is no TLS server here (no `wss://` serving), no sub-protocol
   negotiation exposed and no shelf `Request` access: the handler is created
   internally. For those, use `shelf_web_socket` directly.
