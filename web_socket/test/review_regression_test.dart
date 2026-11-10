@@ -54,6 +54,25 @@ void main() {
       await server.close();
     }, timeout: const Timeout(Duration(seconds: 10)));
 
+    test('memory sink drops the events once the other side closed', () async {
+      var server = await webSocketChannelServerFactoryMemory.serve<String>();
+      var client = webSocketChannelClientFactoryMemory.connect<String>(
+        server.url,
+      );
+      await client.ready;
+      var serverChannel = await server.stream.first;
+      client.sink.add('hi');
+      expect(await serverChannel.stream.first, 'hi');
+      await client.sink.close();
+      // A late answer (a pending request answered after the client left) is
+      // dropped, as a real web socket does, instead of throwing.
+      serverChannel.sink.add('late');
+      serverChannel.sink.addError(StateError('late error'));
+      await serverChannel.sink.addStream(Stream.value('late stream'));
+      client.sink.add('after close');
+      await server.close();
+    }, timeout: const Timeout(Duration(seconds: 10)));
+
     test('smart client factory routes memory: urls', () async {
       var server = await webSocketChannelServerFactoryMemory.serve<String>();
       var factory = smartWebSocketChannelClientFactory(

@@ -133,24 +133,32 @@ class MemorySink<T> implements StreamSink<T> {
   /// Done completer.
   Completer doneCompleter = Completer();
 
+  /// The other side when it can still receive: none before the connection,
+  /// none once either side closed (the events are then silently dropped, as
+  /// the `StreamChannel` guarantees and a real web socket does).
+  WebSocketChannelMemory? get _openLink {
+    var link = this.link;
+    if (link == null || channel._closing || link._closing) {
+      return null;
+    }
+    return link;
+  }
+
   @override
   void add(event) {
-    if (link != null) {
-      link!.streamController.add(event);
-    }
+    _openLink?.streamController.add(event);
   }
 
   @override
   void addError(Object error, [StackTrace? stackTrace]) {
-    if (link != null) {
-      link!.streamController.addError(error, stackTrace);
-    }
+    _openLink?.streamController.addError(error, stackTrace);
   }
 
   @override
   Future addStream(Stream stream) {
+    var link = _openLink;
     if (link != null) {
-      return link!.streamController.addStream(stream);
+      return link.streamController.addStream(stream);
     }
     return Future.value();
   }
